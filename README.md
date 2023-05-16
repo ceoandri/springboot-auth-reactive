@@ -1,6 +1,6 @@
 # springboot-auth-reactive
 
-## Prequisite
+## Prerequisite
 1. Springboot v3.0.6
 2. Java 17
 
