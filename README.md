@@ -43,8 +43,8 @@ public class AuthCatcherConfiguration {
 public class AuthValidatorConfiguration implements AuthorizeValidator {
 
     @Override
-    public Boolean verify(String headerValue, String[] roles, String module, String[] accessType) {
-        // put your logic here. just return true when passed and false when failed
+    public Mono<Boolean> verify(String headerValue, String[] roles, String module, String[] accessType) {
+        // put your logic here. just return Mono.just(true) when passed and Mono.just(false) when failed
     }
 
 }
