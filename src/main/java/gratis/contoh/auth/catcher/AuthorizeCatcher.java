@@ -47,7 +47,7 @@ public class AuthorizeCatcher {
 		
 		if (headerValue != null) {
 			boolean res = authorizeHeader(
-					authType, headerValue, roles, module, accessTypes).toFuture().get();;
+					authType, headerValue, roles, module, accessTypes).toFuture().get();
 			
 			if (!res) {
 				throw new UnauthorizeException("you don't have permission to access this resource");
