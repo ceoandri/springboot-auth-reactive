@@ -49,5 +49,4 @@ public class ApiController {
 	
 }
 ```
-it's mandatory to always put `ServerHttpRequest` as a first parameter.
-roles, module, and accessTypes are optional. but, if you want to set the accessType, you need to set module
+it's mandatory to always put `ServerHttpRequest` as a first parameter. `roles`, `module`, and `accessTypes` are optional. but, if you want to set the `accessType`, you need to set `module`
