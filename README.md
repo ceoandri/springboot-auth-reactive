@@ -62,8 +62,8 @@ public class ApiController {
 
     @GetMapping("/1")
     @Authorize
-    public ResponseEntity<String> apiSample(ServerHttpRequest request) {
-        return ResponseEntity.ok("Hello world!");
+    public Mono<ResponseEntity<String>> apiSample(ServerHttpRequest request) {
+        return Mono.just(ResponseEntity.ok("Hello world!"));
     }
     
     @PostMapping("/2")
@@ -71,8 +71,8 @@ public class ApiController {
 	roles = {"SUPER ADMIN", "ADMIN"}, 
 	module = "API", 
 	accessTypes = {"CREATE", "UPDATE"})
-    public ResponseEntity<String> apiSample(ServerHttpRequest request, ModelRequest item) {
-        return ResponseEntity.ok("Hello world!");
+    public Mono<ResponseEntity<String>> apiSample(ServerHttpRequest request, ModelRequest item) {
+        return Mono.just(ResponseEntity.ok("Hello world!"));
     }
 	
 }
