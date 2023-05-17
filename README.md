@@ -21,7 +21,6 @@
         <groupId>gratis.contoh</groupId>
         <artifactId>auth-reactive</artifactId>
         <version>1.0.0</version>
-        <scope>compile</scope>
     </dependency>
     ```
 3. Run `mvn clean install` inside your project directory
