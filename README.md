@@ -20,7 +20,7 @@
 <dependency>
 	<groupId>gratis.contoh</groupId>
 	<artifactId>auth-reactive</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 </dependency>
 ```
 3. Run `mvn clean install` inside your project directory
@@ -42,7 +42,12 @@ public class AuthCatcherConfiguration {
 public class AuthValidatorConfiguration implements AuthorizeValidator {
 
     @Override
-    public Mono<Boolean> verify(String headerValue, String[] roles, String module, String[] accessType) {
+    public Mono<Boolean> isAuthenticate(String headerValue, String[] roles, String module, String[] accessType) {
+        // put your logic here. just return Mono.just(true) when passed and Mono.just(false) when failed
+    }
+    
+    @Override
+    public Mono<Boolean> isAuthorize(String headerValue, String[] roles, String module, String[] accessType) {
         // put your logic here. just return Mono.just(true) when passed and Mono.just(false) when failed
     }
 
