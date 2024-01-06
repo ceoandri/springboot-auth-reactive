@@ -1,4 +1,4 @@
-# springboot-auth-reactive
+# spring-auth-reactive
 
 ## Prerequisite
 1. Springboot v3.0.6 or later
