@@ -6,22 +6,22 @@
 
   <groupId>gratis.contoh</groupId>
   <artifactId>auth-reactive</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0</version>
 
   <name>auth-reactive</name>
-  <url>http://repo.contoh.gratis:81</url>
+  <url>https://nexus.contoh.gratis</url>
   
   <distributionManagement>
     <repository>
-      <id>repo-contoh-gratis</id>
-      <url>http://repo.contoh.gratis:81/repository/maven-snapshots/</url>
+      <id>contoh-gratis</id>
+      <url>https://nexus.contoh.gratis/repository/maven-releases/</url>
     </repository>
   </distributionManagement>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+	<maven.compiler.source>17</maven.compiler.source>
+	<maven.compiler.target>17</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -104,8 +104,8 @@
             </execution>
           </executions>
           <configuration>
-           	<serverId>repo-contoh-gratis</serverId>
-            <nexusUrl>http://repo.contoh.gratis:81/</nexusUrl>
+           	<serverId>contoh-gratis</serverId>
+            <nexusUrl>https://nexus.contoh.gratis/</nexusUrl>
             <skipStaging>true</skipStaging>
           </configuration>
         </plugin>

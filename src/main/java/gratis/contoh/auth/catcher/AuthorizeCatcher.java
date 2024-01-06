@@ -1,16 +1,19 @@
 package gratis.contoh.auth.catcher;
 
-
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ServerWebExchange;
 
 import gratis.contoh.auth.annotation.Authorize;
+import gratis.contoh.auth.configuration.ServerWebExchangeContextFilter;
 import gratis.contoh.auth.constant.AuthTypes;
 import gratis.contoh.auth.exception.UnauthenticateException;
 import gratis.contoh.auth.exception.UnauthorizeException;
@@ -20,33 +23,34 @@ import reactor.core.publisher.Mono;
 @Aspect
 @Component
 public class AuthorizeCatcher {
-	
-	@Pointcut("args(httpServletRequest,..)")
-	private void httpServletRequest(ServerHttpRequest serverHttpRequest) {}
-	
 	@Pointcut("@annotation(authorize)")
 	private void authorizeData(Authorize authorize) {}
 	
 	@Autowired
 	private AuthorizeValidator validator;
 	
-	@Before("authorizeData(authorize) && httpServletRequest(request)")
-	public void before(Authorize authorize, ServerHttpRequest request) 
-			throws InterruptedException, ExecutionException {
-		if (!(request instanceof ServerHttpRequest)) {
-			throw new RuntimeException("request should be ServerHttpRequest");
-		}
-		
-		String headerName = authorize.header();
+	@Before("authorizeData(authorize)")
+    public void before(Authorize authorize) 
+    		throws UnauthenticateException, UnauthorizeException, InterruptedException, ExecutionException  {
+		ServerWebExchange exchange = ServerWebExchangeContextFilter.serverWebExchangeThreadLocal.get();
+        ServerHttpRequest request = exchange.getRequest();
+
+        String headerName = authorize.header();
 		String authType = authorize.authType();
 		String[] roles = authorize.roles();
 		String module = authorize.module();
 		String[] accessTypes = authorize.accessTypes();
 		
-		String headerValue = request.getHeaders().getFirst(headerName);
+		HttpHeaders headers = request.getHeaders();
+		List<String> headersStr = headers.get(headerName);
+		if (headersStr == null || headersStr.size() == 0) {
+			throw new UnauthenticateException("please login to access this resource");
+		}
+		
+		String headerValue = headersStr.get(0);
 		
 		if (headerValue != null) {
-			if (this.validator.isAuthenticate(headerValue).toFuture().get()) {
+			if (!this.validator.isAuthenticate(headerValue).toFuture().get()) {
 				throw new UnauthenticateException("please login to access this resource");
 			}
 			
@@ -59,7 +63,7 @@ public class AuthorizeCatcher {
 		} else {
 			throw new UnauthenticateException("please login to access this resource");
 		}
-	}
+    }
 	
 	private Mono<Boolean> authorizeHeader(
 			String authType, 
@@ -83,7 +87,7 @@ public class AuthorizeCatcher {
 				}
 			}
 			default: {
-				return this.validator.isAuthorize(token.split(" ")[1], roles, module, accessTypes);	
+				return this.validator.isAuthorize(token, roles, module, accessTypes);	
 			}
 		}
 	}
