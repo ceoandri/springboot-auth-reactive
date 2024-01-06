@@ -1,17 +1,17 @@
 # springboot-auth-reactive
 
 ## Prerequisite
-1. Springboot v3.0.6
-2. Java 17
+1. Springboot v3.0.6 or later
+2. Java 17 or later
  
 ## How to use this library for your maven project
 1. Add this repository setting in your `pom.xml`
 ```xml
 <repositories>
 	<repository>
-	    <id>repo-contoh-gratis</id>
-	    <name>repo-contoh-gratis</name>
-	    <url>http://repo.contoh.gratis:81/repository/maven-public/</url>
+	    <id>contoh-gratis</id>
+	    <name>contoh-gratis</name>
+	    <url>https://nexus.contoh.gratis/repository/maven-public/</url>
 	</repository>
 </repositories>
 ```
@@ -20,7 +20,7 @@
 <dependency>
 	<groupId>gratis.contoh</groupId>
 	<artifactId>auth-reactive</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.0</version>
 </dependency>
 ```
 3. Run `mvn clean install` inside your project directory
@@ -29,6 +29,7 @@
 1. Create configuration file as catcher
 ```
 @Configuration
+@ComponentScan("gratis.contoh.auth.configuration")
 @ComponentScan("gratis.contoh.auth.catcher")
 @EnableAspectJAutoProxy
 public class AuthCatcherConfiguration {
@@ -66,12 +67,17 @@ public class ApiController {
 
     @GetMapping("/1")
     @Authorize
-    public Mono<ResponseEntity<String>> apiSample(ServerHttpRequest request) {
+    public Mono<ResponseEntity<String>> apiSample() {
         return Mono.just(ResponseEntity.ok("Hello world!"));
     }
     
     @PostMapping("/2")
     @Authorize(
+	header = "Authorization", //The default value is Authorization
+	// The default value is Bearer, you can edit it with Basic or anything you want
+	// If you using custom name, the headerValue will as is from header value sent from FE
+	// i.e if you send token '123123 asdasd1 124123', the header value will filled with '123123 asdasd1 124123'
+	authType = "Bearer", 
 	roles = {"SUPER ADMIN", "ADMIN"}, 
 	module = "API", 
 	accessTypes = {"CREATE", "UPDATE"})
@@ -81,4 +87,4 @@ public class ApiController {
 	
 }
 ```
-it's mandatory to always put `ServerHttpRequest` as a first parameter. `roles`, `module`, and `accessTypes` are optional. but, if you want to set the `accessType`, you need to set `module`
+`roles`, `module`, and `accessTypes` are optional.
